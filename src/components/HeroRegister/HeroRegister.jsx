@@ -8,17 +8,23 @@ function HeroRegister() {
   const [registerError, setRegisterError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
   const handleRegister = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    console.log(email, password);
+    const accepted = e.target.terms.checked;
+    console.log(email, password, accepted);
     setRegisterError("");
     setSuccessMessage("");
+    if (!accepted) {
+      return;
+    }
     if (password.length < 6) {
       setRegisterError("Password must be 6 characters or long");
       return;
-    } else if (!/[A-Z]/.test(password)) {
+    }
+    if (!/[A-Z]/.test(password)) {
       setRegisterError("Password should have at least 1 upper case character");
       return;
     }
@@ -62,16 +68,27 @@ function HeroRegister() {
               <label className="label">
                 <span className="label-text">Password</span>
               </label>
-              <input
-                type={`${!showPassword ? "password" : "text"}`}
-                placeholder="password"
-                name="password"
-                className="input input-bordered"
-                required
-              />
-              <span onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+              <div className="relative">
+                <input
+                  type={`${!showPassword ? "password" : "text"}`}
+                  placeholder="password"
+                  name="password"
+                  className="input input-bordered w-full"
+                  required
+                />
+                <span
+                  className="absolute right-3 top-4"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+              <div className="flex my-2">
+                <input type="checkbox" name="terms" id="terms" />
+                <label className="ml-2" htmlFor="terms">
+                  Accept our <a href="">Terms and Conditions</a>
+                </label>
+              </div>
               <label className="label">
                 <a href="#" className="label-text-alt link link-hover">
                   Forgot password?
