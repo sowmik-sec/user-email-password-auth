@@ -4,18 +4,28 @@ import { useState } from "react";
 
 function HeroRegister() {
   const [user, setUser] = useState(null);
+  const [registerError, setRegisterError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
   const handleRegister = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
     console.log(email, password);
+    setRegisterError("");
+    setSuccessMessage("");
+    if (password.length < 6) {
+      setRegisterError("Password must be 6 characters or long");
+      return;
+    }
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
         console.log(result.user);
         setUser(result.user);
+        setSuccessMessage("User created successfully");
       })
       .catch((err) => {
         console.log("Error ", err);
+        setRegisterError(err.message);
       });
   };
   return (
@@ -64,6 +74,8 @@ function HeroRegister() {
               <button className="btn btn-primary">Register</button>
             </div>
           </form>
+          {registerError && <p className="text-red-400">{registerError}</p>}
+          {successMessage && <p className="text-green-400">{successMessage}</p>}
         </div>
       </div>
     </div>
