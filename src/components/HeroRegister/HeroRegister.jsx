@@ -1,11 +1,13 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../../firebase/firebase.config";
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function HeroRegister() {
   const [user, setUser] = useState(null);
   const [registerError, setRegisterError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const handleRegister = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
@@ -15,6 +17,9 @@ function HeroRegister() {
     setSuccessMessage("");
     if (password.length < 6) {
       setRegisterError("Password must be 6 characters or long");
+      return;
+    } else if (!/[A-Z]/.test(password)) {
+      setRegisterError("Password should have at least 1 upper case character");
       return;
     }
     createUserWithEmailAndPassword(auth, email, password)
@@ -58,12 +63,15 @@ function HeroRegister() {
                 <span className="label-text">Password</span>
               </label>
               <input
-                type="password"
+                type={`${!showPassword ? "password" : "text"}`}
                 placeholder="password"
                 name="password"
                 className="input input-bordered"
                 required
               />
+              <span onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
               <label className="label">
                 <a href="#" className="label-text-alt link link-hover">
                   Forgot password?
